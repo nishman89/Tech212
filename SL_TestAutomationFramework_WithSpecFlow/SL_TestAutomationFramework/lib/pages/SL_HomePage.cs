@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using SL_TestAutomationFramework.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,11 @@ namespace SL_TestAutomationFramework.lib.pages
         {
             SeleniumDriver = seleniumDriver;
         }
-
+        public void EnterSigninCredentials(Credentials cred)
+        {
+            EnterUserName(cred.Username);
+            EnterPassword(cred.Password);
+        }
         public void VisitHomePage() => SeleniumDriver.Navigate().GoToUrl(_homePageUrl);
         public void EnterUserName(string username) => _usernameField.SendKeys(username);
         public void EnterPassword(string password) => _passwordField.SendKeys(password);
