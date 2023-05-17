@@ -49,5 +49,51 @@ namespace APIClientApp.Tests
             Assert.That(spcs.CodeCount(), Is.EqualTo(13));
         }
 
+        [Test]
+        public async Task ReturnCorrectContentType_WhenGetResponseContentTypeIsCalled()
+        {
+            var mockCallManager = new Mock<ICallManager>();
+
+            mockCallManager
+                .Setup(x => x.RestResponse)
+                .Returns(new RestResponse { ContentType = "application/json" });
+
+            mockCallManager
+                .Setup(x => x.MakeRequestAsync(It.IsAny<string>()))
+                .ReturnsAsync("{\"key\":\"value\"}");
+
+            var spcs = new SinglePostcodeService(mockCallManager.Object);
+            await spcs.MakeRequestAsync(It.IsAny<string>());
+            Assert.That(spcs.GetResponseContentType(), Is.EqualTo("application/json"));
+        }
+
+
+        [Test]
+        public async Task ReturnsCorrectHeaderValue_WhenGetHeadersIsCalled_Withfdshofndsifndsinfds()
+        {
+
+            string expectedValue = "testValue";
+            var headers = new List<HeaderParameter>
+                {
+                    new HeaderParameter("header1", "value1" ),
+                    new HeaderParameter ("header2", expectedValue )
+                };
+
+            var mockCallManager = new Mock<ICallManager>();
+
+            // RestResponse StatusCode property set to OK status code
+            mockCallManager
+                .Setup(x => x.RestResponse)
+                .Returns(new RestResponse { Headers = headers });
+
+            mockCallManager
+                .Setup(x => x.MakeRequestAsync(It.IsAny<string>()))
+                .ReturnsAsync("{\"key\":\"value\"}");
+
+            var spcs = new SinglePostcodeService(mockCallManager.Object);
+            await spcs.MakeRequestAsync(It.IsAny<string>());
+            Assert.That(spcs.GetHeaderValue("header2"), Is.EqualTo(expectedValue));
+        }
+
     }
 }
