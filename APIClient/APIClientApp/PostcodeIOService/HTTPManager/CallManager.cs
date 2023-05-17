@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace APIClientApp.PostcodeIOService.HTTPManager
 {
-    public class CallManager
+    public class CallManager : ICallManager
     {
         private readonly RestClient _client;
         public RestResponse RestResponse { get; set; }
@@ -16,7 +16,7 @@ namespace APIClientApp.PostcodeIOService.HTTPManager
             _client = new RestClient(AppConfigReader.BaseUrl);
         }
 
-        public async Task<string> MakePostcodeRequestAsync(string postcode)
+        public async Task<string> MakeRequestAsync(string postcode)
         {
             var request = new RestRequest();
             request.AddHeader("Content-Type", "application/json");

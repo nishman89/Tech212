@@ -14,21 +14,22 @@ namespace APIClientApp.PostcodeIOService
     public class SinglePostcodeService
     {
         #region Properties
-        public CallManager CallManager { get; set; }
+        public ICallManager CallManager { get; set; }
         public JObject JsonResponse { get; set; }
         public string PostcodeReponse { get; set; }
         public DTO<SinglePostcodeResponse> SinglePostcodeDTO { get; set; }
+        
         #endregion
 
-        public SinglePostcodeService()
+        public SinglePostcodeService(ICallManager callManager = null)
         {
-            CallManager = new CallManager();
+            CallManager = callManager is null ? new CallManager() : callManager;
             SinglePostcodeDTO = new DTO<SinglePostcodeResponse>();
         }
 
         public async Task MakeRequestAsync(string postcode)
         {
-            PostcodeReponse = await CallManager.MakePostcodeRequestAsync(postcode);
+            PostcodeReponse = await CallManager.MakeRequestAsync(postcode);
             JsonResponse = JObject.Parse(PostcodeReponse);
             SinglePostcodeDTO.DeserializeResponse(PostcodeReponse);
         }
