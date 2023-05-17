@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using APIClientApp.PostcodeIOService.DataHandling;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
