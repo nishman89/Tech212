@@ -1,4 +1,6 @@
 ﻿using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using System.Text;
 using Newtonsoft.Json.Linq;
 
 namespace APIClient_HttpClient
@@ -49,6 +51,30 @@ namespace APIClient_HttpClient
                     Console.WriteLine("Error: " + ex.Message);
                 }
             }
+
+            var bulkClient = new HttpClient();
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post
+            };
+            request.Headers.Add("Accept", "application/json");
+            var postcodes = new
+            {
+                postcodes = new string[] { "OX49 5NU", "M32 0JG", "NE30 1DP" }
+            };
+            var postcodesJson = JsonConvert.SerializeObject(postcodes);
+            request.Content = new StringContent(postcodesJson, Encoding.UTF8, "application/json");
+            request.RequestUri = new Uri(@$"https://api.postcodes.io/postcodes/");
+
+            HttpResponseMessage bulkPostcodeResponse = await bulkClient.SendAsync(request);
+            Console.WriteLine("Status codes");
+            Console.WriteLine(bulkPostcodeResponse.StatusCode);
+            Console.WriteLine((int)bulkPostcodeResponse.StatusCode);
+
+            string bulkPostcodeContent = await bulkPostcodeResponse.Content.ReadAsStringAsync();
+            Console.WriteLine("\nBulk postcode response body content");
+            Console.WriteLine(bulkPostcodeContent);
+            bulkClient.Dispose();
         }
     }
 }
